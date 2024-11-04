@@ -4,7 +4,7 @@ This repository generates a set of viewpoints in a volume to scan an object. The
 
 The workflow of the repository is illustrated below.
 
-<img src="docs/Volumetric_Viewpoint_Planner_Github.png" width="600" > 
+<img src="docs/Volumetric_Viewpoint_Planner_Github.png" width="800" > 
 
 ### Installation/Running
 
@@ -14,8 +14,14 @@ The workflow of the repository is illustrated below.
 
    ![Reopen in Container](https://github.com/LCAS/ros2_pkg_template/assets/47870260/52b26ae9-ffe9-4e7c-afb9-88cee88f870f)
 
+   <img src="https://github.com/LCAS/ros2_pkg_template/assets/47870260/52b26ae9-ffe9-4e7c-afb9-88cee88f870f" width="200">
+
+
    Then this will promote you with the following two options:
    ![image](https://github.com/user-attachments/assets/d0885c75-59de-4b5d-a8b7-c38bf02444d4)
+
+   <img src="https://github.com/user-attachments/assets/d0885c75-59de-4b5d-a8b7-c38bf02444d4" width="300">
+
 
    You may select the base image according to your targeted application. For instance, if the nodes do not require GPU processing tasks, it is preferable to use the default devcontainer as it is more lightweight.
 
@@ -23,6 +29,8 @@ The workflow of the repository is illustrated below.
    Open the user interface by navigating to the PORTS tab in VSCode, selecting port `6080` (or port `5801` for the CUDA-OpenGL version), and opening it in the browser.
 
    ![Open in Browser](https://github.com/LCAS/ros2_pkg_template/assets/47870260/b61f4c95-453b-4c92-ad66-5133c91abb05)
+
+   <img src="https://github.com/LCAS/ros2_pkg_template/assets/47870260/b61f4c95-453b-4c92-ad66-5133c91abb05" width="300">
 
 
 
