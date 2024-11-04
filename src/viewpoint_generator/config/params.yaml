@@ -1,0 +1,18 @@
+lattice_publisher:
+  ros__parameters:
+    surface: "planar" # "planar" or "cylindrical" or "spherical"
+    towards: "fixed" # "origin" or "axisZ" or "fixed"
+    frame_id: 'plant' # lattice points with respect to which frame e.g. 'panda_link0'
+    dist2plant: 0.3 #meter
+    x_lb_ub: [0.3, 0.3] #meter
+    y_lb_ub: [-0.4, -0.35] #meter
+    z_lb_ub: [0.45, 0.45] #meter
+    theta_hor_lb_ub: [-30.0, 30.0] #degrees (for spherical and cylindrical)
+    theta_ver_lb_ub: [-10.0, 10.0] #degrees (for spherical)
+    x_stepSize: 1.0 #meter
+    y_stepSize: 0.04 #meter
+    z_stepSize: 0.075 #meter
+    theta_hor_stepSize: 10.0 #degrees
+    theta_ver_stepSize: 5.0 #degrees
+    rate: 5 # Hz
+    fixed_orientation: [0.0, -1.5708, -1.3] # [roll, pitch, yaw]
