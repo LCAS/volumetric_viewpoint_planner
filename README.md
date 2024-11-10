@@ -27,5 +27,15 @@ The workflow of the repository is illustrated below.
 
    <img src="https://github.com/LCAS/ros2_pkg_template/assets/47870260/b61f4c95-453b-4c92-ad66-5133c91abb05" width="400">
 
+3. **Running the Volumetric Viewpoint Generator:**
+
+   Run following launch file to publish lattice points (viewpoints) simultaneously as point cloud and pose array messages.
+
+   ```bash
+   ros2 launch viewpoint_generator lattice_publisher.launch.py
+   ```
+   For more details on viewpoint generator, please refer to [documentation](src/viewpoint_generator/README.md#viewpoint-generator)
+
+
 
 
