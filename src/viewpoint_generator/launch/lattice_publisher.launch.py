@@ -3,10 +3,16 @@ from launch.substitutions import PathJoinSubstitution
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
+import os
+
 def generate_launch_description():
 
     config_lattice_publisher = PathJoinSubstitution(
         [FindPackageShare("viewpoint_generator"), "config", "params.yaml"]
+    )
+
+    config_RViz = PathJoinSubstitution(
+        [FindPackageShare("viewpoint_generator"), "config", "RViz", "lattices.rviz"]
     )
 
     # Configure lattice points for robot arm tool frame
@@ -38,9 +44,18 @@ def generate_launch_description():
         name="static_tf_publisher_arm_to_plant",
         output="log",
         arguments = ["1.0", "0.0", "0", "3.1415", "0", "0", "panda_link0", "plant"] )
+    
+    rviz_node = Node(
+        package='rviz2',
+        executable='rviz2',
+        name='rviz2',
+        output='screen',
+        arguments=['-d', config_RViz],
+        additional_env={'DISPLAY': os.environ['DISPLAY']}
+    )
 
-    ld = LaunchDescription()
-    ld.add_action(lattice_publisher)
-    ld.add_action(static_transform_publisher_3)
-
-    return ld
+    return LaunchDescription([
+        lattice_publisher,
+        static_transform_publisher_3,
+        rviz_node
+    ])
