@@ -1,8 +1,8 @@
 '''
 Author: Abdurrahman Yilmaz (AYilmaz@lincoln.ac.uk)
-version: v01
-Date: 16 Nov 2023
-Purpose: Generation of lattice points for robot arm movements
+version: v02
+Date: 14 Nov 2024
+Purpose: Generation of optimal lattice points array for robot arm movements
 Project: Agri-Open core
 '''
 
@@ -23,7 +23,17 @@ from scipy.spatial.transform import Rotation
 
 from rcl_interfaces.msg import SetParametersResult
 
-def sampling_mesh(limits, surface="planar", towards="origin", fixed_orientation=None):
+def sampling_mesh(limits, surface="planar", towards="origin", order="horizontal", fixed_orientation=None):
+    """
+    Generate poses for a 3D grid with the specified scanning order.
+    
+    Parameters:
+    - limits: Dictionary with grid boundaries and step sizes.
+    - surface: Type of surface for generating points.
+    - towards: Orientation direction.
+    - fixed_orientation: Fixed orientation if specified.
+    - order: The scanning order ("horizontal" or "vertical")
+    """
 
     if surface == "planar":
         x_lim = limits.get("x_lb_ub")
@@ -35,7 +45,33 @@ def sampling_mesh(limits, surface="planar", towards="origin", fixed_orientation=
         N_z = int((z_lim[1] - z_lim[0]) / limits.get("z_stepSize")) + 1
 
         X, Y, Z = np.mgrid[x_lim[0]:x_lim[1]:N_x*1j, y_lim[0]:y_lim[1]:N_y*1j, z_lim[0]:z_lim[1]:N_z*1j]
-        poses = np.transpose(np.vstack([X.ravel(), Y.ravel(), Z.ravel()]))
+
+        if order == "horizontal":
+            # Horizontal scanning: stack points along the y-axis with zigzag across x and z
+            poses = np.hstack([X.reshape(-1, 1), Y.reshape(-1, 1), Z.reshape(-1, 1)])
+            poses = poses.reshape(N_x, N_y, N_z, 3)  # Arrange in a 3D grid
+            
+            # Apply zigzag pattern across y-axis (horizontal)
+            for k in range(N_z):  # Loop over the z-axis
+                for i in range(N_x):  # Loop over the x-axis
+                    if i % 2 == 1:  # Reverse every other row along the y-axis
+                        poses[i, :, k, :] = poses[i, ::-1, k, :]  # Reverse y-values for this x, z slice
+            
+            poses = poses.reshape(-1, 3)  # Flatten back to list of points
+
+        elif order == "vertical":
+            # Vertical scanning: stack points along the z-axis with zigzag across x and y
+            poses = np.hstack([X.reshape(-1, 1), Y.reshape(-1, 1), Z.reshape(-1, 1)])
+            poses = poses.reshape(N_x, N_y, N_z, 3)  # Arrange in a 3D grid
+            
+            # Apply zigzag pattern across z-axis (vertical)
+            for i in range(N_x):  # Loop over the x-axis
+                for j in range(N_y):  # Loop over the y-axis
+                    if (i + j) % 2 == 1:  # Reverse every other column along the z-axis
+                        poses[i, j, :, :] = poses[i, j, ::-1, :]
+            
+            poses = poses.reshape(-1, 3)  # Flatten back to list of points
+
     elif surface == "cylindrical":
         x_lim = limits.get("dist2plant")
         y_lim = limits.get("theta_hor_lb_ub")
@@ -46,7 +82,31 @@ def sampling_mesh(limits, surface="planar", towards="origin", fixed_orientation=
         N_z = int((z_lim[1] - z_lim[0]) / limits.get("z_stepSize")) + 1
 
         X, Y, Z = np.mgrid[x_lim[0]:x_lim[1]:N_x * 1j, y_lim[0]:y_lim[1]:N_y * 1j, z_lim[0]:z_lim[1]:N_z * 1j]
-        poses = np.transpose(np.vstack([X.ravel(), Y.ravel(), Z.ravel()]))
+        if order == "horizontal":
+            # Horizontal scanning: stack points along the y-axis with zigzag across x and z
+            poses = np.dstack([X.reshape(-1, 1), Y.reshape(-1, 1), Z.reshape(-1, 1)])
+            poses = poses.reshape(N_x, N_y, N_z, 3)  # Arrange in a 3D grid
+            
+            # Apply zigzag pattern across y-axis (horizontal)
+            for i in range(N_x):  # Loop over the x-axis
+                for k in range(N_z):  # Loop over the z-axis
+                    if k % 2 == 1:  # Reverse every other row along the y-axis
+                        poses[i, :, k, :] = poses[i, ::-1, k, :]  # Reverse y-values for this x, z slice
+            
+            poses = poses.reshape(-1, 3)  # Flatten back to list of points
+
+        elif order == "vertical":
+            # Vertical scanning: stack points along the z-axis with zigzag across x and y
+            poses = np.hstack([X.reshape(-1, 1), Y.reshape(-1, 1), Z.reshape(-1, 1)])
+            poses = poses.reshape(N_x, N_y, N_z, 3)  # Arrange in a 3D grid
+            
+            # Apply zigzag pattern across z-axis (vertical)
+            for i in range(N_x):  # Loop over the x-axis
+                for j in range(N_y):  # Loop over the y-axis
+                    if (i + j) % 2 == 1:  # Reverse every other column along the z-axis
+                        poses[i, j, :, :] = poses[i, j, ::-1, :]
+            
+            poses = poses.reshape(-1, 3)  # Flatten back to list of points
         for i in range(poses.shape[0]):
             dist = poses[i, 0]
             angle = poses[i, 1]
@@ -62,7 +122,31 @@ def sampling_mesh(limits, surface="planar", towards="origin", fixed_orientation=
         N_z = int((z_lim[1] - z_lim[0]) / limits.get("theta_ver_stepSize")) + 1
 
         X, Y, Z = np.mgrid[x_lim[0]:x_lim[1]:N_x * 1j, y_lim[0]:y_lim[1]:N_y * 1j, z_lim[0]:z_lim[1]:N_z * 1j]
-        poses = np.transpose(np.vstack([X.ravel(), Y.ravel(), Z.ravel()]))
+        if order == "horizontal":
+            # Horizontal scanning: stack points along the y-axis with zigzag across x and z
+            poses = np.hstack([X.reshape(-1, 1), Y.reshape(-1, 1), Z.reshape(-1, 1)])
+            poses = poses.reshape(N_x, N_y, N_z, 3)  # Arrange in a 3D grid
+            
+            # Apply zigzag pattern across y-axis (horizontal)
+            for k in range(N_z):  # Loop over the z-axis
+                for i in range(N_x):  # Loop over the x-axis
+                    if i % 2 == 1:  # Reverse every other row along the y-axis
+                        poses[i, :, k, :] = poses[i, ::-1, k, :]  # Reverse y-values for this x, z slice
+            
+            poses = poses.reshape(-1, 3)  # Flatten back to list of points
+
+        elif order == "vertical":
+            # Vertical scanning: stack points along the z-axis with zigzag across x and y
+            poses = np.hstack([X.reshape(-1, 1), Y.reshape(-1, 1), Z.reshape(-1, 1)])
+            poses = poses.reshape(N_x, N_y, N_z, 3)  # Arrange in a 3D grid
+            
+            # Apply zigzag pattern across z-axis (vertical)
+            for i in range(N_x):  # Loop over the x-axis
+                for j in range(N_y):  # Loop over the y-axis
+                    if (i + j) % 2 == 1:  # Reverse every other column along the z-axis
+                        poses[i, j, :, :] = poses[i, j, ::-1, :]
+            
+            poses = poses.reshape(-1, 3)  # Flatten back to list of points
         for i in range(poses.shape[0]):
             dist = poses[i, 0]
             angle_hor = poses[i, 1]
@@ -108,8 +192,8 @@ def sampling_mesh(limits, surface="planar", towards="origin", fixed_orientation=
     elif towards == "fixed":
         for i in range(rpy_.shape[0]):
             rpy_[i, :] = fixed_orientation
-            print("np.radians(fixed_orientation): ", np.radians(fixed_orientation))
-            print("rpy_[i, :]: ", rpy_[i, :])
+            #print("np.radians(fixed_orientation): ", np.radians(fixed_orientation))
+            #print("rpy_[i, :]: ", rpy_[i, :])
     else:
         for i in range(rpy_.shape[0]):
             pointA = poses[i,:]
@@ -158,6 +242,9 @@ class PoseArrayPublisher(Node):
             if param.name == 'towards' and param.type_ == rclpy.Parameter.Type.STRING:
                 self.get_logger().info("New value set to %s" % str(param.name) + " param: " + str(param.value))
                 self.towards = param.value
+            if param.name == 'order' and param.type_ == rclpy.Parameter.Type.STRING:
+                self.get_logger().info("New value set to %s" % str(param.name) + " param: " + str(param.value))
+                self.order = param.value
             if param.name == 'frame_id' and param.type_ == rclpy.Parameter.Type.STRING:
                 self.get_logger().info("New value set to %s" % str(param.name) + " param: " + str(param.value))
                 self.header_lattice.frame_id = param.value
@@ -212,6 +299,7 @@ class PoseArrayPublisher(Node):
             parameters=[
                 ('surface', "planar"),
                 ('towards', "origin"),
+                ('order', "horizontal"),
                 ('frame_id', 'plant'),
                 ('dist2plant', 1.0),
                 ('x_lb_ub', [1.0, 1.0]),
@@ -238,10 +326,12 @@ class PoseArrayPublisher(Node):
         timer_period = 1 / self.rate
         self.timer = self.create_timer(timer_period, self.timer_callback)
         self.counter = 0
+        self.cnt = 0
 
         dist2plant = self.get_parameter('dist2plant').value #meter
         self.surface = self.get_parameter('surface').value # "planar" or "cylindrical" or "spherical"
         self.towards = self.get_parameter('towards').value # "origin" or "axisZ"
+        self.order = self.get_parameter('order').value # "horizontal" or "vertical"
 
         self.fixed_orientation = self.get_parameter('fixed_orientation').value # [roll, pitch, yaw]
         print(self.fixed_orientation)
@@ -261,7 +351,7 @@ class PoseArrayPublisher(Node):
         }
 
         # Run the Sampling function
-        self.poses = sampling_mesh(self.limits, self.surface, self.towards, self.fixed_orientation)  # Grid average sampling throughout the field
+        self.poses = sampling_mesh(self.limits, self.surface, self.towards, self.order, self.fixed_orientation)  # Grid average sampling throughout the field
         self.update_points = False
 
         #print("poses (x, y, z)", poses)
@@ -273,7 +363,7 @@ class PoseArrayPublisher(Node):
 
         # update points by running the Sampling function
         if self.update_points:
-            self.poses = sampling_mesh(self.limits, self.surface, self.towards, self.fixed_orientation)  # Grid average sampling throughout the field
+            self.poses = sampling_mesh(self.limits, self.surface, self.towards, self.order, self.fixed_orientation)  # Grid average sampling throughout the field
             self.update_points = False
 
         self.header_lattice.stamp = self.get_clock().now().to_msg()
@@ -286,7 +376,7 @@ class PoseArrayPublisher(Node):
 
         self.pose_array.poses.clear()
         
-        for i in range(self.poses.shape[0]):
+        '''for i in range(self.poses.shape[0]):
             # Convert Euler to quaternions and print
             cols = range(3, 6)
             rot = Rotation.from_euler('XYZ', self.poses[i,cols])
@@ -301,7 +391,34 @@ class PoseArrayPublisher(Node):
 
         self.pose_array.header.stamp = self.get_clock().now().to_msg()
         self.pose_array.header.frame_id = self.header_lattice.frame_id
-        self.publisher_lattice_pose.publish(self.pose_array)
+        self.publisher_lattice_pose.publish(self.pose_array)'''
+
+        if self.cnt < self.poses.shape[0]:
+            # Select the current pose by index
+            cols = range(0, 3)
+            position = self.poses[self.cnt, cols]
+            cols = range(3, 6)
+            euler_angles = self.poses[self.cnt, cols]
+            
+            # Create a new Pose message
+            pose = Pose()
+            pose.position.x, pose.position.y, pose.position.z = position
+            rot = Rotation.from_euler('XYZ', euler_angles)
+            rot_quat = rot.as_quat()
+            pose.orientation.x, pose.orientation.y, pose.orientation.z, pose.orientation.w = rot_quat
+
+            # Publish this pose in a PoseArray with a single element
+            self.pose_array.poses.clear()
+            self.pose_array.poses.append(pose)
+            self.pose_array.header.stamp = self.get_clock().now().to_msg()
+            self.pose_array.header.frame_id = self.header_lattice.frame_id
+            self.publisher_lattice_pose.publish(self.pose_array)
+            
+            # Move to the next pose
+            self.cnt += 1
+        else:
+            # Reset the counter after all poses have been published
+            self.cnt = 0
 
         #self.get_logger().info("Length of pose array %s" % str(len(self.pose_array.poses)))
 
