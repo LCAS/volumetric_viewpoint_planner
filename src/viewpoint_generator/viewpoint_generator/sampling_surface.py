@@ -182,7 +182,7 @@ class PoseArrayPublisher(Node):
 
         self.pose_array.poses.clear()
         
-        '''for i in range(self.poses.shape[0]):
+        for i in range(self.poses.shape[0]):
             # Convert Euler to quaternions and print
             cols = range(3, 6)
             rot = Rotation.from_euler('XYZ', self.poses[i,cols])
@@ -197,9 +197,9 @@ class PoseArrayPublisher(Node):
 
         self.pose_array.header.stamp = self.get_clock().now().to_msg()
         self.pose_array.header.frame_id = self.header_lattice.frame_id
-        self.publisher_lattice_pose.publish(self.pose_array)'''
+        self.publisher_lattice_pose.publish(self.pose_array)
 
-        if self.cnt < self.poses.shape[0]:
+        '''if self.cnt < self.poses.shape[0]:
             # Select the current pose by index
             cols = range(0, 3)
             position = self.poses[self.cnt, cols]
@@ -224,7 +224,7 @@ class PoseArrayPublisher(Node):
             self.cnt += 1
         else:
             # Reset the counter after all poses have been published
-            self.cnt = 0
+            self.cnt = 0'''
 
         #self.get_logger().info("Length of pose array %s" % str(len(self.pose_array.poses)))
 
@@ -263,9 +263,6 @@ class PoseArrayPublisher(Node):
             N_x, N_y, N_z = int((x_lim[1] - x_lim[0]) / limits.get("x_stepSize")) + 1, \
                             int((y_lim[1] - y_lim[0]) / limits.get("y_stepSize")) + 1, \
                             int((z_lim[1] - z_lim[0]) / limits.get("z_stepSize")) + 1
-
-        self.get_logger().info(f"x_lim: {x_lim}")
-        self.get_logger().info(f"N_x: {N_x}")
 
         if order == "horizontal":
             X, Z, Y = np.mgrid[x_lim[0]:x_lim[1]:N_x*1j, z_lim[0]:z_lim[1]:N_z*1j, y_lim[0]:y_lim[1]:N_y*1j]
@@ -310,8 +307,10 @@ class PoseArrayPublisher(Node):
             rpy_[:, 1] = np.arcsin(vec_[:, 0])
             rpy_[:, 2] = 0
         elif towards == "axisZ":
-            vec_ = np.array([0, 0, poses[:, 2]]) - poses
-            vec_ /= np.linalg.norm(vec_, axis=1)[:, None]
+            vec_ = np.zeros_like(poses)
+            vec_[:, 2] = poses[:, 2]  # Create a vector pointing to the z-axis
+            vec_ = vec_ - poses
+            vec_ /= np.linalg.norm(vec_, axis=1)[:, None]  # Normalize vectors
             rpy_[:, 0] = np.arctan2(-vec_[:, 1], vec_[:, 2])
             rpy_[:, 1] = np.arcsin(vec_[:, 0])
             rpy_[:, 2] = 0
