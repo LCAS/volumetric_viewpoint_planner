@@ -10,7 +10,11 @@ RUN apt-get update \
     && apt-get install -qq -y --no-install-recommends \
     git \
     python3-pip \
-    python3-rosdep
+    python3-rosdep \
+    ros-humble-rviz2 \
+    ros-humble-rqt \
+    ros-humble-rqt-common-plugins\
+    ros-humble-tf2-tools
 
 # get the source tree and analyse it for its package.xml only
 FROM base as sourcefilter
