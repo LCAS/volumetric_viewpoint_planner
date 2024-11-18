@@ -6,7 +6,7 @@ lattice_publisher:
     frame_id: 'plant' # lattice points with respect to which frame e.g. 'panda_link0'
     x_lb_ub: [0.2, 0.3] #meter
     y_lb_ub: [-0.15, 0.1] #meter
-    z_lb_ub: [0.3, 0.5] #meter
+    z_lb_ub: [-0.3, 0.3] #meter
     theta_hor_lb_ub: [-30.0, 30.0] #degrees (for spherical and cylindrical)
     theta_ver_lb_ub: [-10.0, 10.0] #degrees (for spherical)
     x_stepSize: 0.05 #meter
