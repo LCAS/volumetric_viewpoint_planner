@@ -36,7 +36,7 @@ In config folder, **params.yaml** can be used to configure the node.
 
 * **"surface"** parameter for chosing "planar", "cylindrical" or "spherical" surfaces to generate points
 * **"towards"** parameter determines whether lattice points will toward to origin ("origin"), center axis ("axisZ") of the plant or "fixed" orientation selected by user via **fixed_orientation** parameter
-* **"order"** parameter determines whether the viewpoints will ve sorted vertically ("verical") or horizontally ("horizontal")
+* **"order"** parameter determines whether the viewpoints will ve sorted vertically ("vertical") or horizontally ("horizontal")
 * **"frame_id"** parameter is to define the generated poses according to which frame
 * **"x_lb_ub", "y_lb_ub", "z_lb_ub"**, **"theta_hor_lb_ub"**, and **"theta_ver_lb_ub"** parameters describes the upper and lower boundaries of the surface for the lattice points
 * **"x_stepSize", "y_stepSize", "z_stepSize"**, **"theta_hor_stepSize"** , and **"theta_ver_stepSize"** parameters describes the frequency of points in each dimension
