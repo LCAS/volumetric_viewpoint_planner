@@ -17,3 +17,19 @@ source $HOME/.bashrc
 
 source /opt/ros/humble/setup.bash
 colcon build --symlink-install --continue-on-error
+
+sudo apt remove -y "*libfranka*"
+
+sudo git clone --recursive https://github.com/frankaemika/libfranka.git /libfranka
+cd /libfranka
+sudo git checkout 0.8.0
+sudo git submodule update
+sudo sed -i '6i#include <string>' /libfranka/include/franka/control_tools.h
+sudo sed -i '6i#include <stdexcept>' /libfranka/src/control_types.cpp
+sudo mkdir -p /libfranka/build
+cd /libfranka/build
+sudo cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=OFF ..
+sudo cmake --build . 
+cd /libfranka/build
+sudo cpack -G DEB
+sudo dpkg -i libfranka*.deb
