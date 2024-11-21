@@ -1,0 +1,22 @@
+moveit_commander_node:
+  ros__parameters: 
+    move_group_name_: "panda_vision" # "panda_arm" or "hand" or "panda_arm_hand" or "panda_vision"
+    pose_command_seq_type: "all" # "random" or "all"
+    move_group_planning_time_: 10.0 # time allowed to work on planning for moveit move_group
+    move_group_max_vel_scale_: 0.1 # max allowed velocity scale param for planning of moveit move_group
+    move_group_num_planning_attempts_: 2 # the number of planning attempts for moveit move_group
+    planner_type: "PILZ" # to be used planner "OMPL" or "PILZ"
+    pilz_planner: "LIN" # If PILZ, pilz linear ("LIN") and arc ("CIRC")
+    pre_delay_: 2.5 # save image pre_delay sec after arm stops
+    post_delay_: 0.5 # move to the next pose post_delay sec after image captured
+    capture_images_: True # decide whether images to be captured or not
+    image_info_record_sub_directory_: "franka_real_polytunnel/tomato_high_res/20240926_all/tomato01" # where to record image info csv file
+    image_info_record_file_name_: "image_info" # image info csv file name
+    ref_frameID_: "panda_link0" # reference frame ID, robot base frame for image capturing
+    camera_frameID_: "camera_optical" # camera frame ID, the camera used for image capturing
+
+image_saver:  
+  ros__parameters:
+    save_all_image: False 
+    #encoding: "bgr8"
+    filename_format: "franka_real_polytunnel/tomato_high_res/20240926_all/tomato01/img%04d.png"

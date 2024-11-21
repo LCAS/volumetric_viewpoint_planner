@@ -13,8 +13,18 @@ RUN apt-get update \
     python3-rosdep \
     ros-humble-rviz2 \
     ros-humble-rqt \
-    ros-humble-rqt-common-plugins\
-    ros-humble-tf2-tools
+    ros-humble-rqt-common-plugins \
+    ros-humble-tf2-tools \
+    build-essential \
+    cmake \
+    libpoco-dev \
+    libeigen3-dev \
+    dpkg \
+    ros-humble-spinnaker-camera-driver \
+    ros-humble-flir-camera-msgs \
+    ros-humble-flir-camera-description \
+    ros-humble-ros2-control \
+    ros-humble-controller-interface
 
 # get the source tree and analyse it for its package.xml only
 FROM base as sourcefilter
