@@ -27,7 +27,14 @@ The workflow of the repository is illustrated below.
 
    <img src="https://github.com/LCAS/ros2_pkg_template/assets/47870260/b61f4c95-453b-4c92-ad66-5133c91abb05" width="400">
 
-3. **Running the Volumetric Viewpoint Generator:**
+3. **Getting Started: Build Packages**
+
+   ```bash
+   cd ${your_ws} && colcon build
+   source install/setup.bash
+   ```
+
+4. **Running the Volumetric Viewpoint Generator:**
 
    Run following launch file to publish lattice points (viewpoints) simultaneously as point cloud and pose array messages.
 
@@ -36,6 +43,47 @@ The workflow of the repository is illustrated below.
    ```
    For more details on viewpoint generator, please refer to [documentation](src/viewpoint_generator/README.md#viewpoint-generator)
 
+5. **Arm and Camera Setup**
+
+   According to the planned camera-arm setup, the necessary packages should be installed and executed at this stage.
+
+   In our case, the default setup includes Franka Emika Panda Robot and Flir Blackfly-s Color camera.
+
+   For arm, 
+
+   ```bash
+   cd ${your_ws}/src
+   git clone --branch humble https://github.com/LCAS/franka_arm_ros2
+   cd franka_arm_ros2 && git checkout humble
+   cd ${your_ws} && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DFranka_DIR:PATH=/libfranka/build`
+   source install/setup.bash
+   ```
+   libfranka has been already installed while building docker image.
+
+   For more details, please refer to [documentation](https://github.com/LCAS/franka_arm_ros2)
+
+   For camera,
+
+   ```bash
+   cd ${your_ws}/src
+   git clone --branch humble-devel https://github.com/LCAS/flir_camera_driver
+   cd flir_camera_driver && git checkout humble-devel
+   cd ..
+   rosdep install --from-paths src --ignore-src
+   colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+   source install/setup.bash
+   ```
+
+   For more details, please refer to [documentation](https://github.com/LCAS/flir_camera_driver/blob/humble-devel/spinnaker_camera_driver/doc/index.rst)
+
+6. **Running the Moveit2 Commander Recorder:**
+
+   Run the following launch file to generate pose commands for the arm using MoveIt2 based on viewpoints' poses (including point positions and orientations) and capture images at the viewpoints.
+
+   ```bash
+   ros2 launch moveit2_commander_recorder moveit_commander.launch.py
+   ```
+   For more details on moveit2 commander recorder, please refer to [documentation](src/moveit2_commander_recorder#franka-arm-moveit-commander-for-plant-inspection)
 
 
 
