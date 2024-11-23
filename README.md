@@ -47,9 +47,9 @@ The workflow of the repository is illustrated below.
 
    According to the planned camera-arm setup, the necessary packages should be installed and executed at this stage.
 
-   In our case, the default setup includes Franka Emika Panda Robot and Flir Blackfly-s Color camera.
+   In our case, the default setup includes Franka Emika Panda Robot and Flir Blackfly-s Color camera. The following information describes how to install and run them.
 
-   For arm, 
+   **For arm,**
 
    ```bash
    cd ${your_ws}/src
@@ -58,11 +58,11 @@ The workflow of the repository is illustrated below.
    cd ${your_ws} && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DFranka_DIR:PATH=/libfranka/build`
    source install/setup.bash
    ```
-   libfranka has been already installed while building docker image.
+   libfranka (version 0.8.0) has been already installed while building docker image. 
 
    For more details, please refer to [documentation](https://github.com/LCAS/franka_arm_ros2)
 
-   For camera,
+   **For camera,**
 
    ```bash
    cd ${your_ws}/src
@@ -75,6 +75,15 @@ The workflow of the repository is illustrated below.
    ```
 
    For more details, please refer to [documentation](https://github.com/LCAS/flir_camera_driver/blob/humble-devel/spinnaker_camera_driver/doc/index.rst)
+
+   To run arm platform (arm + camera):
+   ```bash
+   ros2 launch spinnaker_camera_driver driver_node.launch.py camera_type:=blackfly_s serial:="'<camera-serial>'"
+   ros2 launch franka_moveit_config moveit_real_arm_platform.launch.py robot_ip:=<fci-ip> camera_type:=blackfly_s serial:="'<camera-serial>'" load_camera:=True
+   ```
+   Example: `robot_ip:=172.16.0.2`, `serial:="'22141921'"` 
+
+   To test on fake hardware, add `use_fake_hardware:=True` argument to the launch file.
 
 6. **Running the Moveit2 Commander Recorder:**
 
