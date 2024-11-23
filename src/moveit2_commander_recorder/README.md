@@ -44,7 +44,7 @@ In config folder, **parameters.yaml** can be used to configure the node.
 ## Commander node parameters
 
 * **"move_group_name_"** parameter for choosing move group name defined in your robot arm, for example for the Franka arm it can be "panda_arm", "hand", "panda_arm_hand" or "panda_vision"
-* **"pose_command_seq_type"** parameter for choosing how to send lattice poses. "all" means that all lattice points will be sent in an order. "random" means that one of the lattice points will be selected randomly and to be sent as target pose
+* **"pose_command_seq_type"** parameter for choosing how to send lattice poses (viewpoints). "all" means that all lattice points will be sent in an order. "random" means that one of the lattice points will be selected randomly and to be sent as target pose. The order of the viewpoints (vertical, horizontal) can be chosen via [viewpoint_generator](https://github.com/LCAS/volumetric_viewpoint_planner/tree/main/src/viewpoint_generator) package
 
 * Please note that the pose commands will be generated according to the defined frameID in the lattice pose array message
 
