@@ -52,3 +52,4 @@ qtcreator-*
 CATKIN_IGNORE
 
 src/**/franka_arm_ros2
+src/**/flir_camera_driver
