@@ -79,9 +79,9 @@ The workflow of the repository is illustrated below.
    To run arm platform (arm + camera):
    ```bash
    ros2 launch spinnaker_camera_driver driver_node.launch.py camera_type:=blackfly_s serial:="'<camera-serial>'"
-   ros2 launch franka_moveit_config moveit_real_arm_platform.launch.py robot_ip:=<fci-ip> camera_type:=blackfly_s serial:="'<camera-serial>'" load_camera:=True
+   ros2 launch franka_moveit_config moveit_real_arm_platform.launch.py robot_ip:=<fci-ip> camera_type:=blackfly_s serial:="'<camera-serial>'" load_camera:=True planner:=<planner_name>
    ```
-   Example: `robot_ip:=172.16.0.2`, `serial:="'22141921'"` 
+   Example `robot_ip:=172.16.0.2`, `serial:="'22141921'"`, `planner:=pilz_industrial_motion_planner/CommandPlanner` 
 
    To test on fake hardware, add `use_fake_hardware:=True` argument to the launch file.
 
