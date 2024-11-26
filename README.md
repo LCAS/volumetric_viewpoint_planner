@@ -92,6 +92,17 @@ The workflow of the repository is illustrated below.
    ```bash
    ros2 launch moveit2_commander_recorder moveit_commander.launch.py
    ```
+
+   To pause/resume next pose command sending to the arm, call `pause_motion` and `resume_motion` services. Motion is paused at the beginning, user need to call `resume_motion` service to start movement. When it is paused and resumed again, it will continue from where it stopped.
+
+   ```bash
+   ros2 service call /moveit_commander_node/pause_motion std_srvs/srv/Empty
+   ```
+
+   ```bash
+   ros2 service call /moveit_commander_node/resume_motion std_srvs/srv/Empty
+   ```
+
    For more details on moveit2 commander recorder, please refer to [documentation](src/moveit2_commander_recorder#franka-arm-moveit-commander-for-plant-inspection)
 
 
