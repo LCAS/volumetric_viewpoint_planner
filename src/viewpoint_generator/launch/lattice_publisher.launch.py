@@ -45,6 +45,13 @@ def generate_launch_description():
         output="log",
         arguments = ["1.0", "0.0", "0", "3.1415", "0", "0", "panda_link0", "plant"] )
     
+    static_transform_publisher_4 = Node(
+        package = "tf2_ros", 
+        executable = "static_transform_publisher",
+        name="static_tf_publisher_arm_to_plant",
+        output="log",
+        arguments = ["0.7", "0.0", "0.4", "3.1415", "-0.7854", "0", "panda_link0", "plant"] )
+    
     rviz_node = Node(
         package='rviz2',
         executable='rviz2',
@@ -54,8 +61,13 @@ def generate_launch_description():
         additional_env={'DISPLAY': os.environ['DISPLAY']}
     )
 
+    # return LaunchDescription([
+    #     lattice_publisher,
+    #     static_transform_publisher_3,
+    #     rviz_node
+    # ])
+
     return LaunchDescription([
         lattice_publisher,
-        static_transform_publisher_3,
-        rviz_node
+        static_transform_publisher_4
     ])
