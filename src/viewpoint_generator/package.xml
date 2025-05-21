@@ -3,8 +3,9 @@
 <package format="3">
   <name>viewpoint_generator</name>
   <version>0.0.1</version>
-  <description>Publish Lattice points (viewpoints array) for robot arm</description>
-  <maintainer email="ayilmaz@lincoln.ac.uk">Abdurrahman Yilmaz</maintainer>
+  <description>Publish Lattice points (viewpoints array) for a robot arm</description>
+  <maintainer email="yilmazabdurrah@itu.edu.tr">ayilmaz</maintainer>
+  <author email="yilmazabdurrah@itu.edu.tr">ayilmaz</author>
   <license>Apache 2.0</license>
 
   <exec_depend>rclpy</exec_depend>
