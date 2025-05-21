@@ -3,7 +3,7 @@
 <package format="3">
   <name>moveit2_commander_recorder</name>
   <version>0.0.0</version>
-  <description>Moveit2-based next pose command for Franka Arm</description>
+  <description>Moveit2-based next pose command for a robot arm</description>
   <maintainer email="yilmazabdurrah@itu.edu.tr">ayilmaz</maintainer>
   <author email="yilmazabdurrah@itu.edu.tr">ayilmaz</author>
   <license>Apache 2.0</license>
